@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Notification Loger</string>
+
+    <string name="service_label">NotificationListenerExampleService</string>
+    <string name="data_collection_description">The data below is collected. Thanks for your contribution!</string>
+
+    <!-- Placeholder string for if no data is saved -->
+    <string name="notification_logo">No data is saved currently!</string>
+
+    <!-- Strings related to the Alert Dialog -->
+    <string name="notification_listener_service">"Notification Listener Service"</string>
+    <string name="notification_listener_service_explanation">"For this app to work you need to enable the Notification Listener Service. Enable it now?"</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
