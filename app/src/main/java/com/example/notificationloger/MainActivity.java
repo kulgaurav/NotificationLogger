@@ -1,5 +1,6 @@
 package com.example.notificationloger;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -13,12 +14,18 @@ import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.notificationloger.Entity.Notification;
 import com.example.notificationloger.Misc.Utils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionClient;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     private static final String ANDROID_ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
@@ -26,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv_current_data;
     private DataCollectBroadcastReceiver dataCollectBroadcastReceiver;
+
+    public GoogleApiClient mApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Utils.INTENT_ACTION);
         registerReceiver(dataCollectBroadcastReceiver,intentFilter);
+
+        startService(new Intent(this, NotificationCollectorMonitorService.class));
+
+        mApiClient = new GoogleApiClient.Builder(this)
+                .addApi(ActivityRecognition.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mApiClient.connect();
 
 
     }
@@ -109,6 +127,27 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Intent intent = new Intent( this, ActivityRecognitionListener.class );
+        PendingIntent pendingIntent = PendingIntent.getService( this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 3000, pendingIntent );
+        ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this.getApplicationContext());
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
 
 
 
