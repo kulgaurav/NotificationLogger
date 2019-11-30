@@ -15,14 +15,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.notificationloger.Entity.Notification;
+import com.example.notificationloger.Misc.Utils;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     private static final String ANDROID_ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
 
+
     private TextView tv_current_data;
     private DataCollectBroadcastReceiver dataCollectBroadcastReceiver;
-    private AlertDialog enableNotificationListenerAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +35,25 @@ public class MainActivity extends AppCompatActivity {
         tv_current_data =  this.findViewById(R.id.tv_show_data);
 
         if(!isNotificationServiceEnabled()){
-            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
-            enableNotificationListenerAlertDialog.show();
+            buildNotificationServiceAlertDialog().show();
         }
 
         dataCollectBroadcastReceiver = new DataCollectBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.example.notificationloger");
+        intentFilter.addAction(Utils.INTENT_ACTION);
         registerReceiver(dataCollectBroadcastReceiver,intentFilter);
+
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(dataCollectBroadcastReceiver);
+    }
+
+    private void postNotificationData(Notification notification){
+        tv_current_data.setText(notification.toString());
     }
 
 
@@ -72,10 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * Got it from: https://github.com/kpbird/NotificationListenerService-Example/blob/master/NLSExample/src/main/java/com/kpbird/nlsexample/NLService.java
-     *
-     */
+
     private boolean isNotificationServiceEnabled(){
         String pkgName = getPackageName();
         final String flat = Settings.Secure.getString(getContentResolver(),
@@ -98,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
     public class DataCollectBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int receivedNotificationCode = intent.getIntExtra("Notification Code",-1);
+            Notification receivedNotification = intent.getParcelableExtra(Utils.NOTIFICATION_BUNDLE);
+            if(receivedNotification != null)
+                postNotificationData(receivedNotification);
 
         }
     }
