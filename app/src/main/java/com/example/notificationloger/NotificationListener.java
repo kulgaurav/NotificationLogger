@@ -4,12 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
 import com.example.notificationloger.Entity.Notification;
-import com.example.notificationloger.Misc.Utils;
+import com.example.notificationloger.Misc.UtilsAndConst;
 
 
 public class NotificationListener extends NotificationListenerService {
@@ -30,7 +31,7 @@ public class NotificationListener extends NotificationListenerService {
         super.onCreate();
         nlsReceiver = new NLSReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Utils.INTENT_ACTION);
+        filter.addAction(UtilsAndConst.INTENT_ACTION);
         registerReceiver(nlsReceiver,filter);
     }
 
@@ -44,8 +45,8 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn){
         Notification notification = getCleanNotification(sbn);
         notification.setPostOrRemoval(NOTIFICATION_POSTED);
-        Intent intent = new  Intent(Utils.INTENT_ACTION);
-        intent.putExtra(Utils.NOTIFICATION_BUNDLE, notification);
+        Intent intent = new  Intent(UtilsAndConst.INTENT_ACTION);
+        intent.putExtra(UtilsAndConst.NOTIFICATION_BUNDLE, notification);
         sendBroadcast(intent);
     }
 
@@ -53,8 +54,8 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationRemoved(StatusBarNotification sbn){
         Notification notification = getCleanNotification(sbn);
         notification.setPostOrRemoval(NOTIFICATION_REMOVED);
-        Intent intent = new  Intent(Utils.INTENT_ACTION);
-        intent.putExtra(Utils.NOTIFICATION_BUNDLE, notification);
+        Intent intent = new  Intent(UtilsAndConst.INTENT_ACTION);
+        intent.putExtra(UtilsAndConst.NOTIFICATION_BUNDLE, notification);
         sendBroadcast(intent);
     }
 
@@ -71,12 +72,12 @@ public class NotificationListener extends NotificationListenerService {
         if(sbn == null)
             return null; // Send message with issue rather
         String pkgName = sbn.getPackageName();
-        String arrivalT = Utils.getTimeStampString(sbn.getPostTime());
-
-        String key = sbn.getKey();
+        String arrivalT = UtilsAndConst.getTimeStampString(sbn.getPostTime());
         int id = sbn.getId();
-        System.out.println("Key:" + key + "  id:" + id);
-        return new Notification(arrivalT,pkgName,""); // Let the third param handled at call
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SP_ACTIVITY_RECOG, 0); // 0 - for private mode
+        String detectedActivity = pref.getString(UtilsAndConst.ACT_REG_DETECTED, null);
+        int confidence = pref.getInt(UtilsAndConst.ACT_REG_CONFIDENCE, -1);
+        return new Notification(arrivalT,pkgName,"", id, confidence,detectedActivity); // Let the third postOrRemoval handled at call
 
     }
 

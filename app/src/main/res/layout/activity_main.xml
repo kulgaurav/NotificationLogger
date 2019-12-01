@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:text="@string/data_collection_description"
         android:id="@+id/tv_data_collection_description"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorWhite"
         android:layout_marginTop="18.5dp"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="18dp"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:typeface="monospace"
         />
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="@string/notification_logo"
         android:id="@+id/tv_show_data"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorBlack"
         android:layout_marginTop="18.5dp"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
@@ -44,8 +44,8 @@
         android:layout_marginBottom="18dp"
         android:text="@string/data_thanks"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
         android:typeface="monospace" />
 
 

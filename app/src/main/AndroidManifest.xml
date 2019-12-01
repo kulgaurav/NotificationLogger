@@ -30,6 +30,7 @@
         </service>
 
         <service android:name=".NotificationCollectorMonitorService"/>
+        <service android:name=".ActivityRecognitionListener"/>
 
     </application>
 

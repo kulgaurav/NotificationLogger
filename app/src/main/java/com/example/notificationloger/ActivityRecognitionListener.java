@@ -2,12 +2,11 @@ package com.example.notificationloger;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
+import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
+import com.example.notificationloger.Misc.UtilsAndConst;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
@@ -24,65 +23,65 @@ public class ActivityRecognitionListener extends IntentService {
         super(name);
     }
 
+    public ActivityRecognitionListener() {
+        super("IntentService");
+    }
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if(ActivityRecognitionResult.hasResult(intent)) {
+        if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            handleDetectedActivities( result.getProbableActivities() );
+            handleDetectedActivities(result.getProbableActivities());
         }
 
     }
 
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
-        for( DetectedActivity activity : probableActivities ) {
-            switch( activity.getType() ) {
-                case DetectedActivity.IN_VEHICLE: {
-                    Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.ON_BICYCLE: {
-                    Log.e( "ActivityRecogition", "On Bicycle: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.ON_FOOT: {
-                    Log.e( "ActivityRecogition", "On Foot: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.RUNNING: {
-                    Log.e( "ActivityRecogition", "Running: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.STILL: {
-                    Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
-                    if( activity.getConfidence() >= 75 ) {
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                        builder.setContentText( "Are you still?" );
-                        builder.setSmallIcon( R.mipmap.ic_launcher );
-                        builder.setContentTitle( getString( R.string.app_name ) );
-                        NotificationManagerCompat.from(this).notify(0, builder.build());
+        int maxConfidence = 0;
+        String detectedActivity = "";
+        for (DetectedActivity activity : probableActivities) {
+            if (activity.getConfidence() > maxConfidence) {
+                maxConfidence = activity.getConfidence();
+                switch (activity.getType()) {
+                    case DetectedActivity.IN_VEHICLE: {
+                        detectedActivity = "In_Vehicle";
+                        break;
                     }
-                    break;
-                }
-                case DetectedActivity.TILTING: {
-                    Log.e( "ActivityRecogition", "Tilting: " + activity.getConfidence() );
-                    break;
-                }
-                case DetectedActivity.WALKING: {
-                    Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
-                    if( activity.getConfidence() >= 75 ) {
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                        builder.setContentText( "Are you walking?" );
-                        builder.setSmallIcon( R.mipmap.ic_launcher );
-                        builder.setContentTitle( getString( R.string.app_name ) );
-                        NotificationManagerCompat.from(this).notify(0, builder.build());
+                    case DetectedActivity.ON_BICYCLE: {
+                        detectedActivity = "On Bicycle" ;
+                        break;
                     }
-                    break;
-                }
-                case DetectedActivity.UNKNOWN: {
-                    Log.e( "ActivityRecogition", "Unknown: " + activity.getConfidence() );
-                    break;
+                    case DetectedActivity.ON_FOOT: {
+                        detectedActivity = "On Foot" ;
+                        break;
+                    }
+                    case DetectedActivity.RUNNING: {
+                        detectedActivity = "Running" ;
+                        break;
+                    }
+                    case DetectedActivity.STILL: {
+                        detectedActivity = "Still";
+                        break;
+                    }
+                    case DetectedActivity.TILTING: {
+                        detectedActivity = "Tilting";
+                        break;
+                    }
+                    case DetectedActivity.WALKING: {
+                        detectedActivity =  "Walking";
+                        break;
+                    }
+                    case DetectedActivity.UNKNOWN: {
+                        detectedActivity =  "Unknown" ;
+                        break;
+                    }
                 }
             }
         }
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SP_ACTIVITY_RECOG, 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(UtilsAndConst.ACT_REG_DETECTED, detectedActivity);
+        editor.putInt(UtilsAndConst.ACT_REG_CONFIDENCE, maxConfidence);
+        editor.commit();
     }
 }

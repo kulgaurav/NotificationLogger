@@ -1,14 +1,14 @@
 package com.example.notificationloger;
 
-import android.app.PendingIntent;
-import android.os.Bundle;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.TextView;
@@ -19,11 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.notificationloger.Entity.Notification;
-import com.example.notificationloger.Misc.Utils;
+import com.example.notificationloger.Misc.UtilsAndConst;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityRecognitionClient;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         dataCollectBroadcastReceiver = new DataCollectBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Utils.INTENT_ACTION);
+        intentFilter.addAction(UtilsAndConst.INTENT_ACTION);
         registerReceiver(dataCollectBroadcastReceiver,intentFilter);
 
         startService(new Intent(this, NotificationCollectorMonitorService.class));
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public class DataCollectBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Notification receivedNotification = intent.getParcelableExtra(Utils.NOTIFICATION_BUNDLE);
+            Notification receivedNotification = intent.getParcelableExtra(UtilsAndConst.NOTIFICATION_BUNDLE);
             if(receivedNotification != null)
                 postNotificationData(receivedNotification);
 
@@ -132,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnected(@Nullable Bundle bundle) {
         Intent intent = new Intent( this, ActivityRecognitionListener.class );
         PendingIntent pendingIntent = PendingIntent.getService( this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 3000, pendingIntent );
-        ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this.getApplicationContext());
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 30000, pendingIntent );
+        //ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this.getApplicationContext());
 
 
     }
