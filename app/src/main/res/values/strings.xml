@@ -7,6 +7,7 @@
 
     <!-- Placeholder string for if no data is saved -->
     <string name="notification_logo">No data is saved currently!</string>
+    <string name="notification_bar_msg">"Thanks for your contribution! :)"</string>
 
     <!-- Strings related to the Alert Dialog -->
     <string name="notification_listener_service">"Required: Notification Listener Service"</string>

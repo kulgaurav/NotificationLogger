@@ -1,5 +1,6 @@
 package com.example.notificationloger;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -144,6 +146,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public static class OwnReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+
+                AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent i = new Intent(context, OwnReceiver.class);
+                PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 ), pi);
+                } else if (Build.VERSION.SDK_INT >= 19) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 ), pi);
+                } else {
+                    am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 ), pi);
+                }
+            }
+        }
 
     }
 

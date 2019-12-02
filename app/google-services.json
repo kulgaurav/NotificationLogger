@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "116451446335",
+    "firebase_url": "https://notificationtracker-31b6d.firebaseio.com",
+    "project_id": "notificationtracker-31b6d",
+    "storage_bucket": "notificationtracker-31b6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116451446335:android:ce3507cfe95b0ebbd7f28a",
+        "android_client_info": {
+          "package_name": "com.example.notificationloger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "116451446335-90ge6rsr64uabai416lbnsq82uv49a58.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.notificationloger",
+            "certificate_hash": "b30456713ac68b144a9458111c90f82df8cb8759"
+          }
+        },
+        {
+          "client_id": "116451446335-3fda14arv4a6avf3mv7rrbs8fnqv451d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAic56uIMgPBGJ4Y4hYNYtjTA3hE0B_42M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116451446335-3fda14arv4a6avf3mv7rrbs8fnqv451d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
