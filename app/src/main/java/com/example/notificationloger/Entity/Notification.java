@@ -7,14 +7,12 @@ public class Notification implements Parcelable {
     private String timestamp;
     private String pkgName;
     private String postOrRemoval;
-    private int notificationID;
+    private long notificationID;
     private int maxConfidence;
     private String detectedActivity;
-    private String latitude;
-    private String longitude;
 
 
-    public Notification(String timestamp, String pkgName, String postOrRemoval, int id, int maxConfidence, String detectedActivity) {
+    public Notification(String timestamp, String pkgName, String postOrRemoval, long id, int maxConfidence, String detectedActivity) {
         this.timestamp = timestamp;
         this.pkgName = pkgName;
         this.postOrRemoval = postOrRemoval;
@@ -28,7 +26,7 @@ public class Notification implements Parcelable {
         timestamp = in.readString();
         pkgName = in.readString();
         postOrRemoval = in.readString();
-        notificationID = in.readInt();
+        notificationID = in.readLong();
         maxConfidence = in.readInt();
         detectedActivity = in.readString();
     }
@@ -41,7 +39,7 @@ public class Notification implements Parcelable {
         return postOrRemoval;
     }
 
-    public int getId() {
+    public long getId() {
         return notificationID;
     }
 
@@ -80,7 +78,7 @@ public class Notification implements Parcelable {
         dest.writeString(timestamp);
         dest.writeString(pkgName);
         dest.writeString(postOrRemoval);
-        dest.writeInt(notificationID);
+        dest.writeLong(notificationID);
         dest.writeInt(maxConfidence);
         dest.writeString(detectedActivity);
 

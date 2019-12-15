@@ -52,30 +52,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private DataCollectBroadcastReceiver dataCollectBroadcastReceiver;
 
     public GoogleApiClient mApiClient;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
-
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initServices();
+    }
 
+    private void initServices(){
+        //Setting up view to display one notification
         tv_current_data =  this.findViewById(R.id.tv_show_data);
 
+        //Get access to notification service
         if(!isNotificationServiceEnabled()){
             buildNotificationServiceAlertDialog().show();
         }
 
+        //Set up notification data collector
         dataCollectBroadcastReceiver = new DataCollectBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UtilsAndConst.INTENT_ACTION);
         registerReceiver(dataCollectBroadcastReceiver,intentFilter);
-
         startService(new Intent(this, NotificationCollectorMonitorService.class));
 
+        //Set up GoogleApiClient for Activity Recognition
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(ActivityRecognition.API)
                 .addConnectionCallbacks(this)
@@ -83,10 +88,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
         mApiClient.connect();
 
+        //Set up FireBase Database
         db = FirebaseFirestore.getInstance();
 
+        //Set GPS location service
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
 
     }
 
@@ -96,10 +102,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         unregisterReceiver(dataCollectBroadcastReceiver);
     }
 
+    /*
+        For Sending to DB
+     */
+
     private void postNotificationData(Notification notification){
         tv_current_data.setText(notification.toString());
 
-        fetchLastlocation();
+        fetchLastLocation();
         // Create a new notificationObj
         Map<String, Object> notificationObj = new HashMap<>();
         notificationObj.put("timestamp", notification.getTimestamp());
@@ -107,9 +117,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         notificationObj.put("notificationID", notification.getId());
         notificationObj.put("maxConfidence", notification.getMaxConfidence());
         notificationObj.put("detectedActivity", notification.getDetectedActivity());
+        if(currentLocation!=null){
+            notificationObj.put("latitude", currentLocation.getLatitude());
+            notificationObj.put("longitude", currentLocation.getLongitude());
+
+        }
 
 
-// Add a new document with a generated ID
+        // Add a new document with a generated ID
         db.collection("user_Me")
                 .add(notificationObj)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -127,7 +142,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-
+    /*
+        For Notification service #------------------------------------------------------------------
+     */
     private AlertDialog buildNotificationServiceAlertDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.notification_listener_service);
@@ -148,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 });
         return(alertDialogBuilder.create());
     }
-
 
 
     private boolean isNotificationServiceEnabled(){
@@ -179,6 +195,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         }
     }
+    /*
+         #------------------------------------------------------------------------------------------
+     */
+
+
+    /*
+        For Activity Recognition Service -----------------------------------------------------------
+     */
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -199,6 +223,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    /*
+        ------------------------------------------------------------------------------------------------
+     */
+
+    /*
+        For AutoStart and Running in BG ----------------------------------------------------------------
+     */
 
     public static class OwnReceiver extends BroadcastReceiver {
 
@@ -223,7 +255,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    private void fetchLastlocation() {
+    /*
+        For GPS Location ---------------------------------------------------------------------------
+     */
+    private void fetchLastLocation() {
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -240,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Location location = (Location)o;
                 if (location != null)
                     currentLocation = location;
-                Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "," +
-                        currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "," +
+                // currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
             }
 
         });
@@ -254,11 +289,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case REQUEST_CODE:
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLastlocation();
+                    fetchLastLocation();
                 }
                 break;
         }
     }
+
+    /*
+        --------------------------------------------------------------------------------------------
+     */
 
 }
 

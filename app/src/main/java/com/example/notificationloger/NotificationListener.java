@@ -73,7 +73,7 @@ public class NotificationListener extends NotificationListenerService {
             return null; // Send message with issue rather
         String pkgName = sbn.getPackageName();
         String arrivalT = UtilsAndConst.getTimeStampString(sbn.getPostTime());
-        int id = sbn.getId();
+        long id = (long)sbn.getId();
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SP_ACTIVITY_RECOG, 0); // 0 - for private mode
         String detectedActivity = pref.getString(UtilsAndConst.ACT_REG_DETECTED, null);
         int confidence = pref.getInt(UtilsAndConst.ACT_REG_CONFIDENCE, -1);
