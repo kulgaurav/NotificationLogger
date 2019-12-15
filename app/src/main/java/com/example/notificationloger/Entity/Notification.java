@@ -7,15 +7,18 @@ public class Notification implements Parcelable {
     private String timestamp;
     private String pkgName;
     private String postOrRemoval;
-    private int id;
+    private int notificationID;
     private int maxConfidence;
     private String detectedActivity;
+    private String latitude;
+    private String longitude;
+
 
     public Notification(String timestamp, String pkgName, String postOrRemoval, int id, int maxConfidence, String detectedActivity) {
         this.timestamp = timestamp;
         this.pkgName = pkgName;
         this.postOrRemoval = postOrRemoval;
-        this.id = id;
+        this.notificationID = id;
         this.maxConfidence = maxConfidence;
         this.detectedActivity = detectedActivity;
 
@@ -25,9 +28,29 @@ public class Notification implements Parcelable {
         timestamp = in.readString();
         pkgName = in.readString();
         postOrRemoval = in.readString();
-        id = in.readInt();
+        notificationID = in.readInt();
         maxConfidence = in.readInt();
         detectedActivity = in.readString();
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public String getPostOrRemoval() {
+        return postOrRemoval;
+    }
+
+    public int getId() {
+        return notificationID;
+    }
+
+    public int getMaxConfidence() {
+        return maxConfidence;
+    }
+
+    public String getDetectedActivity() {
+        return detectedActivity;
     }
 
     public static final Creator<Notification> CREATOR = new Creator<Notification>() {
@@ -57,7 +80,7 @@ public class Notification implements Parcelable {
         dest.writeString(timestamp);
         dest.writeString(pkgName);
         dest.writeString(postOrRemoval);
-        dest.writeInt(id);
+        dest.writeInt(notificationID);
         dest.writeInt(maxConfidence);
         dest.writeString(detectedActivity);
 
@@ -69,7 +92,7 @@ public class Notification implements Parcelable {
                 "timestamp='" + timestamp + '\'' +
                 ", pkgName='" + pkgName + '\'' +
                 ", postOrRemoval='" + postOrRemoval + '\'' +
-                ", id=" + id +
+                ", id=" + notificationID +
                 ", maxConfidence=" + maxConfidence +
                 ", detectedActivity='" + detectedActivity + '\'' +
                 '}';
