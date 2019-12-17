@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     tv_know_more.setVisibility(View.VISIBLE);
+                    tv_know_more.setMovementMethod(new ScrollingMovementMethod());
                 } else {
                     tv_know_more.setVisibility(View.INVISIBLE);
                 }
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         try {
             registerReceiver(dataCollectBroadcastReceiver, intentFilter);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException  e){
             System.out.println("Already registered!");
         }
         startService(new Intent(this, NotificationCollectorMonitorService.class));
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //unregisterReceiver(dataCollectBroadcastReceiver);
+        unregisterReceiver(dataCollectBroadcastReceiver);
     }
 
     /*
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         for(Map.Entry<String, Object> entry : notificationObj.entrySet()){
-            toConsole.append(entry.getKey() + ": " + entry.getValue() + "\n\n");
+            toConsole.append(entry.getKey() + ": " + entry.getValue() + "\n");
         }
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode

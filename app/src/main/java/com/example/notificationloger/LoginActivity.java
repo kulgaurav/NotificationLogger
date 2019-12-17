@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // User is signed out
            //TODO
-            Toast.makeText(getApplicationContext(), "Please login again!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please login!", Toast.LENGTH_LONG).show();
         }
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                         else {

@@ -19,12 +19,10 @@
 can cause interruptions in the ongoing task by diverting our attention, which potentially
 delays the task completion, including an increased rate of error. These notifications can come
 from any of the app installed on our phone like news app, social media apps, games, and
-others.
-Based on our response to the notification either read and respond or clear, we want to
+others.\n\nBased on our response to the notification either read and respond or clear, we want to
 develop a Machine Learning based solution to understand our response to the notification
-during different times of the day like morning, working hours, lunch, night.
-You are invited to participate in this study of the Intelligent Notification System, which aims
+during different times of the day like morning, working hours, lunch, night.\n\nYou are invited to participate in this study of the Intelligent Notification System, which aims
 to improve the experience with push-based notifications on mobile phones. This study will
 use the notification related data and engagement with it to build machine learning models,
-which will help the notification system to learn the appropriate time to notify the user.</string>
+which will help the notification system to learn the appropriate time to notify the user.\n\n\n\n\n</string>
 </resources>
