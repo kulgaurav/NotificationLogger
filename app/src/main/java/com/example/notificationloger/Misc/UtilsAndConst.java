@@ -13,6 +13,7 @@ public class UtilsAndConst {
     public static final String ACT_REG_CONFIDENCE = "sp_act_reg_confidence";
     public static final String ACT_REG_DETECTED = "sp_act_reg_detected";
     public static final String CONSOLE_MSG = "console_msg";
+    public static final String USER_EMAIL = "user_ema";
 
 
 

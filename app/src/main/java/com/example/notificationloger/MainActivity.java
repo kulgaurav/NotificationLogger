@@ -57,11 +57,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private FirebaseFirestore db;
+    private String userEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+        userEmail = pref.getString(UtilsAndConst.USER_EMAIL, null);
         initServices();
     }
 
@@ -147,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         // Add a new document with a generated ID
-        db.collection("user_Me")
+        db.collection("user_" + userEmail)
                 .add(notificationObj)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override

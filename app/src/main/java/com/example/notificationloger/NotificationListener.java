@@ -18,8 +18,8 @@ import com.example.notificationloger.Misc.UtilsAndConst;
 
 public class NotificationListener extends NotificationListenerService {
 
-    private static final String NOTIFICATION_POSTED = "POSTED";
-    private static final String NOTIFICATION_REMOVED = "REMOVED";
+    private static final String NOTIFICATION_POSTED = "Posted";
+    private static final String NOTIFICATION_REMOVED = "Removed";
 
     private NLSReceiver nlsReceiver;
     private AudioManager mAudioManager;

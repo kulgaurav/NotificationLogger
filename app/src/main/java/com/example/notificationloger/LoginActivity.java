@@ -1,6 +1,7 @@
 package com.example.notificationloger;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.notificationloger.Misc.UtilsAndConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -39,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
             // User is signed in
             Toast.makeText(getApplicationContext(), user.getEmail() + " logged in.", Toast.LENGTH_LONG).show();
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(UtilsAndConst.USER_EMAIL, user.getEmail());
+            editor.apply();
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         } else {
