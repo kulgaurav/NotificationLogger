@@ -14,4 +14,17 @@
     <string name="notification_listener_service_explanation">"For this app to work you need to enable the Notification Listener Service. Enable it now?"</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="big_know_more">Recent studies show that notifications triggered on our mobile devices at inappropriate times
+can cause interruptions in the ongoing task by diverting our attention, which potentially
+delays the task completion, including an increased rate of error. These notifications can come
+from any of the app installed on our phone like news app, social media apps, games, and
+others.
+Based on our response to the notification either read and respond or clear, we want to
+develop a Machine Learning based solution to understand our response to the notification
+during different times of the day like morning, working hours, lunch, night.
+You are invited to participate in this study of the Intelligent Notification System, which aims
+to improve the experience with push-based notifications on mobile phones. This study will
+use the notification related data and engagement with it to build machine learning models,
+which will help the notification system to learn the appropriate time to notify the user.</string>
 </resources>

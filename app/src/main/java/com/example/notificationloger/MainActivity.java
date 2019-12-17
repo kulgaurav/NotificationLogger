@@ -18,8 +18,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private static final int REQUEST_CODE = 200;
     private TextView tv_current_data;
+    private TextView tv_know_more;
     private DataCollectBroadcastReceiver dataCollectBroadcastReceiver;
 
     public GoogleApiClient mApiClient;
@@ -66,6 +70,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
         userEmail = pref.getString(UtilsAndConst.USER_EMAIL, null);
         initServices();
+        tv_know_more = findViewById(R.id.txt_know_more);
+        ToggleButton toggle =  findViewById(R.id.btn_know_more);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tv_know_more.setVisibility(View.VISIBLE);
+                } else {
+                    tv_know_more.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 
     private void initServices(){
@@ -83,7 +99,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         dataCollectBroadcastReceiver = new DataCollectBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UtilsAndConst.INTENT_ACTION);
-        registerReceiver(dataCollectBroadcastReceiver,intentFilter);
+        try {
+            registerReceiver(dataCollectBroadcastReceiver, intentFilter);
+        }
+        catch (Exception e){
+            System.out.println("Already registered!");
+        }
         startService(new Intent(this, NotificationCollectorMonitorService.class));
 
         //Set up GoogleApiClient for Activity Recognition
@@ -105,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(dataCollectBroadcastReceiver);
+        //unregisterReceiver(dataCollectBroadcastReceiver);
     }
 
     /*
