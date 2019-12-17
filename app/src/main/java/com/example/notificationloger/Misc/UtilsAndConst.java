@@ -9,9 +9,10 @@ public class UtilsAndConst {
     public static final String INTENT_ACTION = "com.example.notificationloger";
     public static final String NOTIFICATION_BUNDLE = "Notification";
 
-    public static final String SP_ACTIVITY_RECOG = "sp_act_reg";
+    public static final String SHARED_PREF_LOGGER = "notification_logger_sharedPref";
     public static final String ACT_REG_CONFIDENCE = "sp_act_reg_confidence";
     public static final String ACT_REG_DETECTED = "sp_act_reg_detected";
+    public static final String CONSOLE_MSG = "console_msg";
 
 
 

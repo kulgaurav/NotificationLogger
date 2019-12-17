@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void initServices(){
         //Setting up view to display one notification
         tv_current_data =  this.findViewById(R.id.tv_show_data);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+        tv_current_data.setText(pref.getString(UtilsAndConst.CONSOLE_MSG, "No data saved currently!"));
 
         //Get access to notification service
         if(!isNotificationServiceEnabled()){
@@ -107,21 +110,40 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      */
 
     private void postNotificationData(Notification notification){
-        tv_current_data.setText(notification.toString());
+        StringBuilder toConsole = new StringBuilder();
+
 
         fetchLastLocation();
         // Create a new notificationObj
         Map<String, Object> notificationObj = new HashMap<>();
-        notificationObj.put("timestamp", notification.getTimestamp());
-        notificationObj.put("postOrRemoval", notification.getPostOrRemoval());
-        notificationObj.put("notificationID", notification.getId());
-        notificationObj.put("maxConfidence", notification.getMaxConfidence());
-        notificationObj.put("detectedActivity", notification.getDetectedActivity());
+        notificationObj.put("Timestamp", notification.getTimestamp());
+        notificationObj.put("PostOrRemoval", notification.getPostOrRemoval());
+        notificationObj.put("NotificationID", notification.getId());
+        notificationObj.put("MaxConfidence", notification.getMaxConfidence());
+        notificationObj.put("DetectedActivity", notification.getDetectedActivity());
+        notificationObj.put("RingerMode", notification.getRingerMode());
+
+        notificationObj.put("BatteryPercentage", notification.getBatteryPercentage());
+        notificationObj.put("isConnected", notification.getIsConnected());
+        notificationObj.put("isConnectedWifi", notification.getIsConnectedWifi());
+        notificationObj.put("isConnectedMobile", notification.getIsConnectedMobile());
+        notificationObj.put("ScreenLocked", notification.getScreenLocked());
+
+
         if(currentLocation!=null){
-            notificationObj.put("latitude", currentLocation.getLatitude());
-            notificationObj.put("longitude", currentLocation.getLongitude());
+            notificationObj.put("Latitude", currentLocation.getLatitude());
+            notificationObj.put("Longitude", currentLocation.getLongitude());
 
         }
+
+        for(Map.Entry<String, Object> entry : notificationObj.entrySet()){
+            toConsole.append(entry.getKey() + ": " + entry.getValue() + "\n\n");
+        }
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(UtilsAndConst.CONSOLE_MSG, toConsole.toString());
+        editor.apply();
 
 
         // Add a new document with a generated ID
@@ -131,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+                        tv_current_data.setText(pref.getString(UtilsAndConst.CONSOLE_MSG, "No data saved currently!"));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

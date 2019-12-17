@@ -78,7 +78,7 @@ public class ActivityRecognitionListener extends IntentService {
                 }
             }
         }
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SP_ACTIVITY_RECOG, 0); // 0 - for private mode
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(UtilsAndConst.ACT_REG_DETECTED, detectedActivity);
         editor.putInt(UtilsAndConst.ACT_REG_CONFIDENCE, maxConfidence);

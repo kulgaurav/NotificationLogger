@@ -1,10 +1,13 @@
 package com.example.notificationloger;
 
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.os.BatteryManager;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -19,6 +22,7 @@ public class NotificationListener extends NotificationListenerService {
     private static final String NOTIFICATION_REMOVED = "REMOVED";
 
     private NLSReceiver nlsReceiver;
+    private AudioManager mAudioManager;
 
 
     @Override
@@ -73,14 +77,36 @@ public class NotificationListener extends NotificationListenerService {
             return null; // Send message with issue rather
         String pkgName = sbn.getPackageName();
         String arrivalT = UtilsAndConst.getTimeStampString(sbn.getPostTime());
-        long id = (long)sbn.getId();
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SP_ACTIVITY_RECOG, 0); // 0 - for private mode
+        String id = sbn.getKey();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
         String detectedActivity = pref.getString(UtilsAndConst.ACT_REG_DETECTED, null);
         int confidence = pref.getInt(UtilsAndConst.ACT_REG_CONFIDENCE, -1);
-        return new Notification(arrivalT,pkgName,"", id, confidence,detectedActivity); // Let the third postOrRemoval handled at call
+
+        // Get an instance of AudioManager system service
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int ringerMode = mAudioManager != null ? mAudioManager.getRingerMode() : -1;
+
+        BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
+        int batteryPercentage = -1;
+        if (android.os.Build.VERSION.SDK_INT >=  android.os.Build.VERSION_CODES.LOLLIPOP) {
+            batteryPercentage = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+        }
+
+        KeyguardManager kgMgr = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        int screenLock = -1;
+        if(kgMgr != null){
+            if(kgMgr.isKeyguardLocked())
+                screenLock = 1;
+            else
+                screenLock = 0;
+        }
+
+        return new Notification(arrivalT,pkgName,"", id, confidence,detectedActivity,ringerMode,batteryPercentage,
+                Connectivity.isConnected(getApplicationContext()),
+                Connectivity.isConnectedWifi(getApplicationContext()),
+                Connectivity.isConnectedMobile(getApplicationContext()),
+                screenLock); // Let the third param postOrRemoval handled at call
 
     }
-
-
 
 }
