@@ -64,7 +64,7 @@
         android:backgroundTint="#FF9800"
         android:text="Know More"
         android:textOff="Know More"
-        android:textOn="Know Less"
+        android:textOn="Hide"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_data_thanks" />

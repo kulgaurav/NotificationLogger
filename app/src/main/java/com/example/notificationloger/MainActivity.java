@@ -46,22 +46,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     private static final String ANDROID_ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
-    private static final String TAG = "MainActivity";
+
 
     private static final int REQUEST_CODE = 200;
     private TextView tv_current_data;
     private TextView tv_know_more;
-    private DataCollectBroadcastReceiver dataCollectBroadcastReceiver;
 
-    public GoogleApiClient mApiClient;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private FirebaseFirestore db;
     private String userEmail = "";
 
     @Override
@@ -70,7 +67,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
         userEmail = pref.getString(UtilsAndConst.USER_EMAIL, null);
+        if(userEmail == null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+        }
         initServices();
+
         tv_know_more = findViewById(R.id.txt_know_more);
         ToggleButton toggle =  findViewById(R.id.btn_know_more);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void initServices(){
         //Setting up view to display one notification
         tv_current_data =  this.findViewById(R.id.tv_show_data);
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER,0); // 0 - for private mode
         tv_current_data.setText(pref.getString(UtilsAndConst.CONSOLE_MSG, "No data saved currently!"));
 
         //Get access to notification service
@@ -97,99 +101,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             buildNotificationServiceAlertDialog().show();
         }
 
-        //Set up notification data collector
-        dataCollectBroadcastReceiver = new DataCollectBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UtilsAndConst.INTENT_ACTION);
-        try {
-            registerReceiver(dataCollectBroadcastReceiver, intentFilter);
-        }
-        catch (IllegalArgumentException  e){
-            System.out.println("Already registered!");
-        }
-        startService(new Intent(this, NotificationCollectorMonitorService.class));
-
-        //Set up GoogleApiClient for Activity Recognition
-        mApiClient = new GoogleApiClient.Builder(this)
-                .addApi(ActivityRecognition.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mApiClient.connect();
-
-        //Set up FireBase Database
-        db = FirebaseFirestore.getInstance();
-
-        //Set GPS location service
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fetchLastLocation();
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(dataCollectBroadcastReceiver);
     }
 
-    /*
-        For Sending to DB
-     */
-
-    private void postNotificationData(Notification notification){
-        StringBuilder toConsole = new StringBuilder();
-
-
-        fetchLastLocation();
-        // Create a new notificationObj
-        Map<String, Object> notificationObj = new HashMap<>();
-        notificationObj.put("Timestamp", notification.getTimestamp());
-        notificationObj.put("PostOrRemoval", notification.getPostOrRemoval());
-        notificationObj.put("NotificationID", notification.getId());
-        notificationObj.put("MaxConfidence", notification.getMaxConfidence());
-        notificationObj.put("DetectedActivity", notification.getDetectedActivity());
-        notificationObj.put("RingerMode", notification.getRingerMode());
-
-        notificationObj.put("BatteryPercentage", notification.getBatteryPercentage());
-        notificationObj.put("isConnected", notification.getIsConnected());
-        notificationObj.put("isConnectedWifi", notification.getIsConnectedWifi());
-        notificationObj.put("isConnectedMobile", notification.getIsConnectedMobile());
-        notificationObj.put("ScreenLocked", notification.getScreenLocked());
-
-
-        if(currentLocation!=null){
-            notificationObj.put("Latitude", currentLocation.getLatitude());
-            notificationObj.put("Longitude", currentLocation.getLongitude());
-
-        }
-
-        for(Map.Entry<String, Object> entry : notificationObj.entrySet()){
-            toConsole.append(entry.getKey() + ": " + entry.getValue() + "\n");
-        }
-
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(UtilsAndConst.CONSOLE_MSG, toConsole.toString());
-        editor.apply();
-
-
-        // Add a new document with a generated ID
-        db.collection("user_" + userEmail)
-                .add(notificationObj)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
-                        tv_current_data.setText(pref.getString(UtilsAndConst.CONSOLE_MSG, "No data saved currently!"));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
 
 
     /*
@@ -236,47 +157,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-    public class DataCollectBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Notification receivedNotification = intent.getParcelableExtra(UtilsAndConst.NOTIFICATION_BUNDLE);
-            if(receivedNotification != null)
-                postNotificationData(receivedNotification);
-
-        }
-    }
     /*
          #------------------------------------------------------------------------------------------
      */
 
 
-    /*
-        For Activity Recognition Service -----------------------------------------------------------
-     */
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Intent intent = new Intent( this, ActivityRecognitionListener.class );
-        PendingIntent pendingIntent = PendingIntent.getService( this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 30000, pendingIntent );
-        //ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this.getApplicationContext());
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    /*
-        ------------------------------------------------------------------------------------------------
-     */
 
     /*
         For AutoStart and Running in BG ----------------------------------------------------------------
@@ -345,9 +230,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    /*
-        --------------------------------------------------------------------------------------------
-     */
 
 }
 

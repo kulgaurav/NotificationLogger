@@ -89,7 +89,9 @@ public class NotificationListener extends NotificationListenerService {
         BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
         int batteryPercentage = -1;
         if (android.os.Build.VERSION.SDK_INT >=  android.os.Build.VERSION_CODES.LOLLIPOP) {
-            batteryPercentage = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+            if (bm != null) {
+                batteryPercentage = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+            }
         }
 
         KeyguardManager kgMgr = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
