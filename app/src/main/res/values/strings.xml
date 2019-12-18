@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Notification Loger</string>
+    <string name="app_name">Notification Logger</string>
 
     <string name="service_label">NotificationListenerExampleService</string>
     <string name="data_collection_description">The data below is collected.</string>

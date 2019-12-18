@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='Notification Loger'
+rootProject.name='Notification Logger'

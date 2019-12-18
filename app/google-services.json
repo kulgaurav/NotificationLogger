@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:116451446335:android:ce3507cfe95b0ebbd7f28a",
+        "mobilesdk_app_id": "1:116451446335:android:65ad368dee4ec234d7f28a",
         "android_client_info": {
-          "package_name": "com.example.notificationloger"
+          "package_name": "com.example.notificationlogger"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "116451446335-90ge6rsr64uabai416lbnsq82uv49a58.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.notificationloger",
-            "certificate_hash": "b30456713ac68b144a9458111c90f82df8cb8759"
-          }
-        },
         {
           "client_id": "116451446335-3fda14arv4a6avf3mv7rrbs8fnqv451d.apps.googleusercontent.com",
           "client_type": 3
