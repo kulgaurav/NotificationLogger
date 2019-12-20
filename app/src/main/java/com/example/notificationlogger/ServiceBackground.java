@@ -21,7 +21,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.notificationlogger.Entity.Notification;
 import com.example.notificationlogger.Misc.UtilsAndConst;
-import com.example.notificationlogger.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -150,7 +149,7 @@ public class ServiceBackground extends Service implements GoogleApiClient.Connec
         Map<String, Object> notificationObj = new HashMap<>();
         notificationObj.put("Timestamp", notification.getTimestamp());
         notificationObj.put("PostOrRemoval", notification.getPostOrRemoval());
-        notificationObj.put("NotificationID", notification.getId());
+        notificationObj.put("NotificationKey", notification.getKey());
         notificationObj.put("MaxConfidence", notification.getMaxConfidence());
         notificationObj.put("DetectedActivity", notification.getDetectedActivity());
         notificationObj.put("RingerMode", notification.getRingerMode());
@@ -160,6 +159,7 @@ public class ServiceBackground extends Service implements GoogleApiClient.Connec
         notificationObj.put("isConnectedWifi", notification.getIsConnectedWifi());
         notificationObj.put("isConnectedMobile", notification.getIsConnectedMobile());
         notificationObj.put("ScreenLocked", notification.getScreenLocked());
+        notificationObj.put("NotificationID", notification.getNotificationId());
 
 
         if(currentLocation!=null){
@@ -190,7 +190,7 @@ public class ServiceBackground extends Service implements GoogleApiClient.Connec
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        Log.d(TAG, "NotificationLogger saving with ID: " + documentReference.getId());
                         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
 
                     }

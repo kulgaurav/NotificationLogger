@@ -76,7 +76,7 @@ public class NotificationListener extends NotificationListenerService {
         if(sbn == null)
             return null; // Send message with issue rather
         String pkgName = sbn.getPackageName();
-        String arrivalT = UtilsAndConst.getTimeStampString(sbn.getPostTime());
+        long arrivalT = sbn.getPostTime(); //UtilsAndConst.getTimeStampString(sbn.getPostTime());
         String id = sbn.getKey();
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
         String detectedActivity = pref.getString(UtilsAndConst.ACT_REG_DETECTED, null);
@@ -107,7 +107,7 @@ public class NotificationListener extends NotificationListenerService {
                 Connectivity.isConnected(getApplicationContext()),
                 Connectivity.isConnectedWifi(getApplicationContext()),
                 Connectivity.isConnectedMobile(getApplicationContext()),
-                screenLock); // Let the third param postOrRemoval handled at call
+                screenLock, sbn.getId()); // Let the third param postOrRemoval handled at call
 
     }
 

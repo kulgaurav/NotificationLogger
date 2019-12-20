@@ -4,10 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Notification implements Parcelable {
-    private String timestamp;
+    private long timestamp;
     private String pkgName;
     private String postOrRemoval;
-    private String notificationID;
+    private String notificationKey;
+    private int notificationId;
     private int maxConfidence;
     private String detectedActivity;
     private int ringerMode;
@@ -21,12 +22,13 @@ public class Notification implements Parcelable {
 
 
 
-    public Notification(String timestamp, String pkgName, String postOrRemoval, String id, int maxConfidence, String detectedActivity, int ringerMode,
-    int batteryPercentage, boolean isConnected, boolean isConnectedWifi, boolean isConnectedMobile, int screenLocked) {
+    public Notification(long timestamp, String pkgName, String postOrRemoval, String key, int maxConfidence, String detectedActivity, int ringerMode,
+    int batteryPercentage, boolean isConnected, boolean isConnectedWifi, boolean isConnectedMobile, int screenLocked, int id) {
         this.timestamp = timestamp;
         this.pkgName = pkgName;
         this.postOrRemoval = postOrRemoval;
-        this.notificationID = id;
+        this.notificationKey = key;
+        this.notificationId = id;
         this.maxConfidence = maxConfidence;
         this.detectedActivity = detectedActivity;
         this.ringerMode = ringerMode;
@@ -43,10 +45,11 @@ public class Notification implements Parcelable {
     }
 
     public Notification(Parcel in) {
-        timestamp = in.readString();
+        timestamp = in.readLong();
         pkgName = in.readString();
         postOrRemoval = in.readString();
-        notificationID = in.readString();
+        notificationKey = in.readString();
+        notificationId = in.readInt();
         maxConfidence = in.readInt();
         detectedActivity = in.readString();
         ringerMode = in.readInt();
@@ -57,7 +60,7 @@ public class Notification implements Parcelable {
         screenLocked = in.readInt();
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -65,8 +68,12 @@ public class Notification implements Parcelable {
         return postOrRemoval;
     }
 
-    public String getId() {
-        return notificationID;
+    public String getKey() {
+        return notificationKey;
+    }
+
+    public int getNotificationId() {
+        return notificationId;
     }
 
     public int getMaxConfidence() {
@@ -127,10 +134,11 @@ public class Notification implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(timestamp);
+        dest.writeLong(timestamp);
         dest.writeString(pkgName);
         dest.writeString(postOrRemoval);
-        dest.writeString(notificationID);
+        dest.writeString(notificationKey);
+        dest.writeInt(notificationId);
         dest.writeInt(maxConfidence);
         dest.writeString(detectedActivity);
         dest.writeInt(ringerMode);
