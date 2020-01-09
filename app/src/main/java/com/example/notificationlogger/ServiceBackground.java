@@ -172,7 +172,7 @@ public class ServiceBackground extends Service implements GoogleApiClient.Connec
         }
 
         for(Map.Entry<String, Object> entry : notificationObj.entrySet()){
-            toConsole.append(entry.getKey() + ": " + entry.getValue() + "\n");
+            toConsole.append(entry.getKey() + " => " + entry.getValue() + "\n");
         }
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode

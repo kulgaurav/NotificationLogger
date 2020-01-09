@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     tv_know_more.setVisibility(View.INVISIBLE);
                 }
+            }
+        });
+
+
+        final Button buttonFetchData = findViewById(R.id.btnFetchData);
+        buttonFetchData.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Please mail to gauravk@tcd.ie for all your saved data.",
+                        Toast.LENGTH_LONG).show();
             }
         });
 

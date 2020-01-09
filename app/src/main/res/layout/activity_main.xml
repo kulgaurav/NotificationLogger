@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorBlack">
 
     <TextView
         android:id="@+id/tv_data_collection_description"
@@ -30,9 +30,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/notification_logo"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorGrey"
         android:textSize="18sp"
-        android:typeface="normal"
+        android:typeface="serif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_data_collection_description" />
@@ -53,6 +53,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_show_data" />
 
+    <Button
+        android:id="@+id/btnFetchData"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/colorBTN"
+        android:text="Fetch my data"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_data_thanks" />
+
     <ToggleButton
         android:id="@+id/btn_know_more"
         style="@android:style/Widget.Button.Toggle"
@@ -60,12 +72,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="#FF9800"
+        android:backgroundTint="@color/colorBTN"
         android:text="Know More"
         android:textOff="Know More"
         android:textOn="Hide"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_data_thanks" />
 
@@ -87,6 +98,8 @@
         android:maxLines="15"
         android:visibility="gone"
         android:text="@string/big_know_more"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

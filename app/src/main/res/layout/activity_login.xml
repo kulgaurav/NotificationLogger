@@ -7,22 +7,26 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/colorBlack"
     tools:context="com.example.notificationlogger.LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
         android:text="Account login"/>
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
         android:hint="Email" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
         android:hint="Password"
         android:inputType="textPassword" />
 
@@ -30,6 +34,7 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorBTN"
         android:text="Login" />
 
     <ProgressBar
