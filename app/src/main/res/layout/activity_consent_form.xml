@@ -8,36 +8,34 @@
     android:background="@color/colorBlack">
 
 
-
-
     <TextView
         android:id="@+id/consent_form_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:textSize="18sp"
         android:gravity="fill"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_know_more"
-        android:textColor="@color/colorWhite"
         android:maxLines="25"
-        android:text="@string/big_know_more"/>
+        android:scrollbars="vertical"
+        android:text="@string/big_know_more"
+        android:textColor="@color/colorGrey"
+        android:textSize="18sp"
+        android:typeface="serif"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_know_more" />
 
     <CheckBox
         android:id="@+id/consent_form_CB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="79dp"
+        android:layout_marginTop="24dp"
+        android:buttonTint="@color/colorBTN"
         android:text="I am above 18 years of age and accept to contribute."
         android:textColor="@color/colorWhite"
         android:textSize="20sp"
-        android:buttonTint="@color/colorBTN"
-        app:layout_constraintBottom_toTopOf="@+id/btn_consent_form"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/consent_form_text" />
@@ -45,14 +43,15 @@
     <Button
         android:id="@+id/btn_consent_form"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="100dp"
-        android:layout_height="38dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorBTN"
         android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/consent_form_CB" />
 
 
 

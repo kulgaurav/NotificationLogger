@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             // User is signed in
             Toast.makeText(getApplicationContext(), user.getEmail() + " logged in.", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(LoginActivity.this, ConsentForm.class);
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
             SharedPreferences pref = getApplicationContext().getSharedPreferences(UtilsAndConst.SHARED_PREF_LOGGER, 0); // 0 - for private mode
             SharedPreferences.Editor editor = pref.edit();
             editor.putString(UtilsAndConst.USER_EMAIL, user.getEmail());
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, ConsentForm.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
