@@ -14,12 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-        android:text="Account login"/>
+        android:text="Please enter your credentials."
+        android:textSize="22sp"
+        android:typeface="monospace"/>
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorWhite"
+
         android:hint="Email" />
 
     <EditText
@@ -28,6 +32,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:hint="Password"
+        android:textColorHint="@color/colorWhite"
         android:inputType="textPassword" />
 
     <Button
