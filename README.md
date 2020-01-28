@@ -19,6 +19,7 @@ The app runs in the background, and auto-starts when the phone boots.
 <i>For some phones, we need to give additional permission of autostart to always run in the background.</i>
 
 <img src="https://github.com/warkulock/NotificationLogger/blob/master/SS_Perm_Autostart.jpg" width="230" height="450">
+<img src="https://github.com/warkulock/NotificationLogger/blob/master/SS_App_Data.jpg" width="230" height="450">
 
 ## Getting Started
 
